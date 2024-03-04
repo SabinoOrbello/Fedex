@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Spedizioni.Models.Spedizione>
+
+@{
+    ViewBag.Title = "ListaSpedizioni";
+}
+
+<h2>ListaSpedizioni</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ClienteId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataSpedizione)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Peso)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CittaDestinataria)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IndirizzoDestinatario)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CostoSpedizione)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataConsegnaPrevista)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClienteId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DataSpedizione)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Peso)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CittaDestinataria)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IndirizzoDestinatario)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CostoSpedizione)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DataConsegnaPrevista)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.SpedizioneId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.SpedizioneId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.SpedizioneId })
+        </td>
+    </tr>
+}
+
+</table>
