@@ -27,6 +27,9 @@
             @Html.DisplayNameFor(model => model.IndirizzoDestinatario)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.NominativoDestinatario)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.CostoSpedizione)
         </th>
         <th>
@@ -53,16 +56,15 @@
             @Html.DisplayFor(modelItem => item.IndirizzoDestinatario)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.NominativoDestinatario)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.CostoSpedizione)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.DataConsegnaPrevista)
         </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.SpedizioneId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.SpedizioneId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.SpedizioneId })
-        </td>
+        <
     </tr>
 }
 

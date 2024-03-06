@@ -16,6 +16,12 @@ namespace Spedizioni.Models
         [Required(ErrorMessage = "Il campo Stato è obbligatorio.")]
         public string Stato { get; set; }
 
+        [Required(ErrorMessage = "Il campo Luogo è obbligatorio.")]
+        public string Luogo { get; set; }
+
+        [Required(ErrorMessage = "Il campo Descrizione è obbligatorio.")]
+        public string Descrizione { get; set; }
+
         [Required(ErrorMessage = "Il campo Data e Ora Aggiornamento è obbligatorio.")]
         public DateTime DataOraAggiornamento { get; set; }
     }

@@ -1,0 +1,21 @@
+﻿<!-- VerificaStatoSpedizione.cshtml -->
+
+@model Spedizioni.Models.VerificaStatoSpedizioni
+
+@using (Html.BeginForm("VerificaStatoSpedizione", "StatoSpedizioni", FormMethod.Post))
+{
+    <!-- Campi del form per codice fiscale, partita IVA e numero di spedizione -->
+    @Html.LabelFor(model => model.CodiceFiscale)
+    @Html.TextBoxFor(model => model.CodiceFiscale)
+    <br />
+
+    @Html.LabelFor(model => model.PartitaIva)
+    @Html.TextBoxFor(model => model.PartitaIva)
+    <br />
+
+    @Html.LabelFor(model => model.SpedizioneId)
+    @Html.TextBoxFor(model => model.SpedizioneId)
+    <br />
+
+    <input type="submit" value="Verifica Stato Spedizione" />
+}

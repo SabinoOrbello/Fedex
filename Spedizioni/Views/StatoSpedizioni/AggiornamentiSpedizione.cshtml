@@ -1,0 +1,24 @@
+﻿<!-- AggiornamentiSpedizione.cshtml -->
+
+@model List<Spedizioni.Models.AggiornamentoSpedizione>
+
+<h2>Aggiornamenti della Spedizione</h2>
+
+@if (Model.Any())
+{
+    <ul>
+        @foreach (var aggiornamento in Model)
+        {
+            <li>
+                <strong>Data/Ora:</strong> @aggiornamento.DataOraAggiornamento <br />
+                <strong>Stato:</strong> @aggiornamento.Stato <br />
+                <strong>Luogo:</strong> @aggiornamento.Luogo <br />
+                <strong>Descrizione:</strong> @aggiornamento.Descrizione
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Nessun aggiornamento disponibile per la spedizione.</p>
+}

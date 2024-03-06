@@ -122,12 +122,15 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SpedizioniController.cs" />
+    <Compile Include="Controllers\StatoSpedizioniController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AggiornamentoSpedizione.cs" />
     <Compile Include="Models\Clienti.cs" />
     <Compile Include="Models\Spedizione.cs" />
+    <Compile Include="Models\TipoCliente.cs" />
+    <Compile Include="Models\VerificaStatoSpedizioni.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +187,11 @@
     <Content Include="Views\Home\ListaClienti.cshtml" />
     <Content Include="Views\Home\AnagrafaCliente.cshtml" />
     <Content Include="Views\Spedizioni\ListaSpedizioni.cshtml" />
+    <Content Include="Views\StatoSpedizioni\ListaStatoSpedizioni.cshtml" />
+    <Content Include="Views\Spedizioni\Create.cshtml" />
+    <Content Include="Views\StatoSpedizioni\VerificaStatoSpedizione.cshtml" />
+    <Content Include="Views\StatoSpedizioni\AggiornamentiSpedizione.cshtml" />
+    <Content Include="Views\StatoSpedizioni\NessunaInformazioneSpedizione.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
