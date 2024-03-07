@@ -11,7 +11,7 @@ namespace Spedizioni.Controllers
 {
     public class StatoSpedizioniController : Controller
     {
-        // GET: StatoSpedizioni
+
         string connectionString = ConfigurationManager.ConnectionStrings["Fedex"].ToString();
 
         public ActionResult ListaStatoSpedizioni()
@@ -19,6 +19,11 @@ namespace Spedizioni.Controllers
             List<AggiornamentoSpedizione> listaStatoSpedizioni = GetListaStatoSpedizioniFromDatabase();
 
             return View(listaStatoSpedizioni);
+        }
+
+        public ActionResult Create()
+        {
+            return View();
         }
 
         private List<AggiornamentoSpedizione> GetListaStatoSpedizioniFromDatabase()
@@ -55,42 +60,105 @@ namespace Spedizioni.Controllers
             return listaStatoSpedizioni;
         }
 
-        public ActionResult VerificaStatoSpedizione()
+        [HttpPost]
+        public ActionResult Create(AggiornamentoSpedizione nuovoStatoSpedizione)
+        {
+            if (ModelState.IsValid)
+            {
+
+                InserisciSpedizioneNelDatabase(nuovoStatoSpedizione);
+
+                return RedirectToAction("ListaStatoSpedizioni");
+            }
+
+
+            return View(nuovoStatoSpedizione);
+        }
+
+        private void InserisciSpedizioneNelDatabase(AggiornamentoSpedizione nuovoStatoSpedizione)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = "INSERT INTO AggiornamentiSpedizioni (SpedizioneId, Stato, Luogo, Descrizione, DataOraAggiornamento) VALUES (@SpedizioneId, @Stato, @Luogo, @Descrizione, @DataOraAggiornamento)";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@SpedizioneId", nuovoStatoSpedizione.SpedizioneId);
+                    command.Parameters.AddWithValue("@Stato", nuovoStatoSpedizione.Stato);
+                    command.Parameters.AddWithValue("@Luogo", nuovoStatoSpedizione.Luogo);
+                    command.Parameters.AddWithValue("@Descrizione", nuovoStatoSpedizione.Descrizione);
+                    command.Parameters.AddWithValue("@DataOraAggiornamento", nuovoStatoSpedizione.DataOraAggiornamento);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public ActionResult AggiornamentiSpedizione(List<AggiornamentoSpedizione> aggiornamenti)
+        {
+            return View(aggiornamenti);
+        }
+
+        public ActionResult NessunaInformazioneSpedizione()
         {
             return View();
         }
 
-        [HttpPost]
-        public ActionResult VerificaStatoSpedizione(VerificaStatoSpedizioni model)
+        private bool VerificaAssociazioneClienteSpedizione(string codiceFiscale, string partitaIVA, int spedizioneId)
         {
-            switch (model.TipoCliente)
-            {
-                case TipoCliente.Privato:
-                    if (VerificaAssociazioneClienteSpedizione(model.CodiceFiscale, null, model.SpedizioneId))
-                    {
-                        // Ottieni gli aggiornamenti della spedizione dal database
-                        List<AggiornamentoSpedizione> aggiornamenti = GetStatiSpedizioneFromDatabase(model.SpedizioneId);
-                        // Restituisci la vista con gli aggiornamenti
-                        return View("AggiornamentiSpedizione", aggiornamenti);
-                    }
-                    break;
+            int clienteId = GetClienteIdByCodiceFiscale(codiceFiscale);
 
-                case TipoCliente.Azienda:
-                    if (VerificaAssociazioneClienteSpedizione(null, model.PartitaIva, model.SpedizioneId))
+            if (clienteId > 0)
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = "SELECT COUNT(*) FROM Spedizioni WHERE ClienteId = @ClienteId AND SpedizioneId = @SpedizioneId";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        // Ottieni gli aggiornamenti della spedizione dal database
-                        List<AggiornamentoSpedizione> aggiornamenti = GetStatiSpedizioneFromDatabase(model.SpedizioneId);
-                        // Restituisci la vista con gli aggiornamenti
-                        return View("AggiornamentiSpedizione", aggiornamenti);
+                        command.Parameters.AddWithValue("@ClienteId", clienteId);
+                        command.Parameters.AddWithValue("@SpedizioneId", spedizioneId);
+
+                        int count = (int)command.ExecuteScalar();
+
+                        return count > 0;
                     }
-                    break;
+                }
             }
 
-            // Se l'associazione non è confermata, restituisci una vista indicando che non sono disponibili informazioni sulla spedizione
-            return View("NessunaInformazioneSpedizione");
+            return false;
         }
 
+        private bool VerificaAssociazioneClienteSpedizione1(string codiceFiscale, string partitaIVA, int spedizioneId)
+        {
+            int clienteId = GetClienteIdByPartitaIVA(partitaIVA);
 
+            if (clienteId > 0)
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = "SELECT COUNT(*) FROM Spedizioni WHERE ClienteId = @ClienteId AND SpedizioneId = @SpedizioneId";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@ClienteId", clienteId);
+                        command.Parameters.AddWithValue("@SpedizioneId", spedizioneId);
+
+                        int count = (int)command.ExecuteScalar();
+
+                        return count > 0;
+                    }
+                }
+            }
+
+            return false;
+        }
 
         private List<AggiornamentoSpedizione> GetStatiSpedizioneFromDatabase(int spedizioneId)
         {
@@ -129,41 +197,116 @@ namespace Spedizioni.Controllers
             return statiSpedizione;
         }
 
-        private bool VerificaAssociazioneClienteSpedizione(string codiceFiscale, string partitaIva, int spedizioneId)
+        public ActionResult VerificaStatoSpedizione()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult VerificaStatoSpedizione(VerificaStatoSpedizioni model)
+        {
+            switch (model.TipoCliente)
+            {
+                case TipoCliente.Privato:
+                    if (VerificaAssociazioneClienteSpedizione(model.CodiceFiscale, null, model.SpedizioneId))
+                    {
+                        // Ottieni gli aggiornamenti della spedizione dal database
+                        List<AggiornamentoSpedizione> aggiornamenti = GetStatiSpedizioneFromDatabase(model.SpedizioneId);
+                        // Restituisci la vista con gli aggiornamenti
+                        return View("AggiornamentiSpedizione", aggiornamenti);
+                    }
+                    break;
+
+                case TipoCliente.Azienda:
+                    if (VerificaAssociazioneClienteSpedizione1(null, model.PartitaIva, model.SpedizioneId))
+                    {
+                        // Ottieni gli aggiornamenti della spedizione dal database
+                        List<AggiornamentoSpedizione> aggiornamenti = GetStatiSpedizioneFromDatabase(model.SpedizioneId);
+                        // Restituisci la vista con gli aggiornamenti
+                        return View("AggiornamentiSpedizione", aggiornamenti);
+                    }
+                    break;
+            }
+
+            // Se l'associazione non è confermata, restituisci una vista indicando che non sono disponibili informazioni sulla spedizione
+            return View("NessunaInformazioneSpedizione");
+        }
+
+
+        private int GetClienteIdByCodiceFiscale(string codiceFiscale)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                // Verifica l'associazione utilizzando una query SQL
-                string query = "SELECT COUNT(*) FROM Spedizioni \r\nJOIN Clienti ON Spedizioni.ClienteId = Clienti.ClienteId\r\nWHERE (Clienti.CodiceFiscale = @CodiceFiscale OR Clienti.PartitaIva = @PartitaIVA OR Clienti.PartitaIva IS NULL) AND Spedizioni.SpedizioneId = @SpedizioneId";
+                string query = "SELECT ClienteId FROM Clienti WHERE CodiceFiscale = @CodiceFiscale";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@CodiceFiscale", (object)codiceFiscale ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@PartitaIva", (object)partitaIva ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@SpedizioneId", spedizioneId);
+                    // Assicurati che il parametro venga aggiunto correttamente
+                    command.Parameters.Add("@CodiceFiscale", System.Data.SqlDbType.NVarChar, 16).Value = codiceFiscale;
 
-                    int count = (int)command.ExecuteScalar();
+                    // Esegui la query e restituisci il risultato
+                    object result = command.ExecuteScalar();
 
-                    // Restituisci true se l'associazione è confermata (count > 0), altrimenti false
-                    return count > 0;
+                    if (result != null && result != DBNull.Value)
+                    {
+                        return (int)result;
+                    }
+                    return 0;
                 }
             }
         }
 
-
-        public ActionResult AggiornamentiSpedizione(List<AggiornamentoSpedizione> aggiornamenti)
+        private int GetClienteIdByPartitaIVA(string partitaIVA)
         {
-            return View(aggiornamenti);
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = "SELECT ClienteId FROM Clienti WHERE PartitaIVA = @PartitaIVA";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Assicurati che il parametro venga aggiunto correttamente
+                    command.Parameters.Add("@PartitaIVA", System.Data.SqlDbType.NVarChar, 20).Value = partitaIVA;
+
+                    // Eseguire ExecuteScalar per ottenere l'ID del cliente
+                    object result = command.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value)
+                    {
+                        return (int)result;
+                    }
+                }
+            }
+
+            return 0; // o un valore che rappresenta l'assenza di un cliente con la partita IVA specificata
         }
 
-        public ActionResult NessunaInformazioneSpedizione()
-        {
-            return View();
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
     }
+
+
+
+
 }

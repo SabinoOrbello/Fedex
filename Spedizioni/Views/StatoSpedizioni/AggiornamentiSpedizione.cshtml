@@ -1,24 +1,63 @@
-﻿<!-- AggiornamentiSpedizione.cshtml -->
+﻿@model IEnumerable<Spedizioni.Models.AggiornamentoSpedizione>
 
-@model List<Spedizioni.Models.AggiornamentoSpedizione>
-
-<h2>Aggiornamenti della Spedizione</h2>
-
-@if (Model.Any())
-{
-    <ul>
-        @foreach (var aggiornamento in Model)
-        {
-            <li>
-                <strong>Data/Ora:</strong> @aggiornamento.DataOraAggiornamento <br />
-                <strong>Stato:</strong> @aggiornamento.Stato <br />
-                <strong>Luogo:</strong> @aggiornamento.Luogo <br />
-                <strong>Descrizione:</strong> @aggiornamento.Descrizione
-            </li>
-        }
-    </ul>
+@{
+    ViewBag.Title = "AggiornamentiSpedizione";
 }
-else
-{
-    <p>Nessun aggiornamento disponibile per la spedizione.</p>
+
+<h2>AggiornamentiSpedizione</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.AggiornamentoId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SpedizioneId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Stato)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Luogo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descrizione)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataOraAggiornamento)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.AggiornamentoId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SpedizioneId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Stato)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Luogo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descrizione)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DataOraAggiornamento)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
 }
+
+</table>

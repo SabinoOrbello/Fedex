@@ -121,6 +121,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RaggruppamentoSpedizionitController.cs" />
     <Compile Include="Controllers\SpedizioniController.cs" />
     <Compile Include="Controllers\StatoSpedizioniController.cs" />
     <Compile Include="Global.asax.cs">
@@ -188,10 +189,12 @@
     <Content Include="Views\Home\AnagrafaCliente.cshtml" />
     <Content Include="Views\Spedizioni\ListaSpedizioni.cshtml" />
     <Content Include="Views\StatoSpedizioni\ListaStatoSpedizioni.cshtml" />
-    <Content Include="Views\Spedizioni\Create.cshtml" />
-    <Content Include="Views\StatoSpedizioni\VerificaStatoSpedizione.cshtml" />
+    <Content Include="Views\StatoSpedizioni\Create.cshtml" />
     <Content Include="Views\StatoSpedizioni\AggiornamentiSpedizione.cshtml" />
+    <Content Include="Views\StatoSpedizioni\VerificaStatoSpedizione.cshtml" />
     <Content Include="Views\StatoSpedizioni\NessunaInformazioneSpedizione.cshtml" />
+    <Content Include="Views\Spedizioni\Create.cshtml" />
+    <Content Include="Views\RaggruppamentoSpedizionit\SpedizioniInConsegnaOdierna.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

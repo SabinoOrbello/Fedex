@@ -1,21 +1,37 @@
-﻿<!-- VerificaStatoSpedizione.cshtml -->
-
+﻿
 @model Spedizioni.Models.VerificaStatoSpedizioni
 
 @using (Html.BeginForm("VerificaStatoSpedizione", "StatoSpedizioni", FormMethod.Post))
 {
-    <!-- Campi del form per codice fiscale, partita IVA e numero di spedizione -->
-    @Html.LabelFor(model => model.CodiceFiscale)
-    @Html.TextBoxFor(model => model.CodiceFiscale)
-    <br />
+    @Html.ValidationSummary(true)
 
-    @Html.LabelFor(model => model.PartitaIva)
-    @Html.TextBoxFor(model => model.PartitaIva)
-    <br />
+    <div>
+        @Html.LabelFor(model => model.TipoCliente)
+        @Html.DropDownListFor(model => model.TipoCliente, new List<SelectListItem>
+        {
+            new SelectListItem { Text = "Privato", Value = "Privato" },
+            new SelectListItem { Text = "Azienda", Value = "Azienda" }
+        }, "Seleziona tipo cliente")
+        @Html.ValidationMessageFor(model => model.TipoCliente)
+    </div>
 
-    @Html.LabelFor(model => model.SpedizioneId)
-    @Html.TextBoxFor(model => model.SpedizioneId)
-    <br />
+    <div>
+        @Html.LabelFor(model => model.CodiceFiscale)
+        @Html.TextBoxFor(model => model.CodiceFiscale)
+        @Html.ValidationMessageFor(model => model.CodiceFiscale)
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.PartitaIva)
+        @Html.TextBoxFor(model => model.PartitaIva)
+        @Html.ValidationMessageFor(model => model.PartitaIva)
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.SpedizioneId)
+        @Html.TextBoxFor(model => model.SpedizioneId)
+        @Html.ValidationMessageFor(model => model.SpedizioneId)
+    </div>
 
     <input type="submit" value="Verifica Stato Spedizione" />
 }

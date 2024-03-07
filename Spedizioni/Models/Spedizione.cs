@@ -34,5 +34,9 @@ namespace Spedizioni.Models
         [Required(ErrorMessage = "Il campo Data Consegna Prevista è obbligatorio.")]
         public DateTime DataConsegnaPrevista { get; set; }
 
+        public bool InConsegna { get; set; }
+
+
+
     }
 }
